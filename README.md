@@ -104,7 +104,7 @@ merged. Both can only add warnings.
 ## Good to know
 
 - Needs a Claude Code version whose plugins can open a side pane; tested with
-  Claude Code 2.1.311.
+  Claude Code 2.1.310 and 2.1.311.
 - Pull requests and runs are recognised on github.com only.
 - On mobile you can copy a file's path but not open the file.
 - Tested in the macOS terminal; its tests also draw the pane for the desktop
