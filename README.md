@@ -40,10 +40,6 @@ Type `/outputs` to open it any time.
 <details>
 <summary>Other ways to install</summary>
 
-In the desktop app, where `/plugin` does not run: click + next to the prompt
-box, then Plugins, Add marketplace with `gorkamb/claude-session-outputs`, then
-Add plugin.
-
 From a shell:
 
 ```
@@ -112,6 +108,8 @@ merged. Both can only add warnings.
 
 - Needs a Claude Code version whose plugins can open a side pane; tested with
   Claude Code 2.1.310 and 2.1.311.
+- Runs in Claude Code in the terminal. The desktop app lists it as disabled,
+  with no way to turn it on.
 - Pull requests and runs are recognised on github.com only.
 - On mobile you can copy a file's path but not open the file.
 - Tested in the macOS terminal; its tests also draw the pane for the desktop
