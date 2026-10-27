@@ -141,6 +141,12 @@ The screenshot is `docs/pane-mock.html` (made-up data) rendered with Chrome:
 chrome --headless --screenshot=docs/screenshot.png --window-size=1320,770 docs/pane-mock.html
 ```
 
+The icon is `docs/icon.html`, the same way:
+
+```
+chrome --headless --default-background-color=00000000 --screenshot=.claude-plugin/icon.png --window-size=1024,1024 docs/icon.html
+```
+
 ## License
 
 MIT
