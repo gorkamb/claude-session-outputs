@@ -1,0 +1,11 @@
+{
+  "name": "session-outputs",
+  "version": "1.2.0",
+  "description": "A side pane listing what a session made for you: files, Artifacts, PRs, CI runs and the commands it hands you to run",
+  "author": { "name": "gorkamb", "url": "https://github.com/gorkamb" },
+  "homepage": "https://github.com/gorkamb/claude-session-outputs",
+  "repository": "https://github.com/gorkamb/claude-session-outputs",
+  "keywords": ["pane", "screenshots", "artifacts", "pull-requests", "ci", "commands"],
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}

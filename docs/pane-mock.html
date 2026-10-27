@@ -1,0 +1,36 @@
+<!doctype html><meta charset="utf-8">
+<style>
+body{margin:0;background:#1a1b1e;font:15px/1.5 "SF Mono",Menlo,monospace;color:#d4d4d4}
+.term{display:flex;width:1320px;height:770px;padding:20px;box-sizing:border-box;gap:18px}
+.chat{flex:1;color:#8a8a8a;padding-top:8px}
+.chat .u{color:#d4d4d4}.chat .c{color:#d97757}
+.pane{width:660px;border:1px solid #5a5a5a;border-radius:6px;padding:0 14px 14px;position:relative}
+.pane .t{position:absolute;top:-11px;left:14px;background:#1a1b1e;padding:0 6px;color:#d4d4d4}
+.in{padding:18px 0 0 8px}
+.h{font-weight:bold;text-decoration:underline}.d{color:#7a7a7a}.i{font-style:italic}
+.a{color:#d97757;font-weight:bold}.im{color:#b1b9f9;font-weight:bold}.pr{color:#af87ff;font-weight:bold}.ci{color:#4eba65;font-weight:bold}
+.sq{color:#47a3ff;font-weight:bold}.cm{color:#48c0b0;font-weight:bold}.er{color:#ff6b80;font-weight:bold}
+.ok{color:#4eba65}.wa{color:#ffc107;font-weight:bold}.ds{color:#ff6b80;font-weight:bold}
+.l{text-decoration:underline;color:#d4d4d4}.b{color:#7a7a7a}
+p{margin:0}.g{margin-top:14px}.e{margin-top:10px}
+
+.row{display:flex;justify-content:space-between;gap:10px}.row>span:last-child{white-space:nowrap;flex-shrink:0}.row>span:first-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.gh{color:#9aa0a6;font-style:italic}.rule{color:#4a4a4a;overflow:hidden;white-space:nowrap}
+.sub{padding-left:3ch}
+</style>
+<div class="term">
+ <div class="chat">
+  <p class="u">› publish the onboarding checklist as a page</p><br>
+  <p><span class="c">●</span> Published the checklist as a page.</p><br>
+  <p class="u">› open the PR for the date picker fix</p><br>
+  <p><span class="c">●</span> PR opened and checks are green.</p><br>
+  <p class="u">› how many signups this week? and clean up</p>
+  <p class="u">&nbsp;&nbsp;the old preview branches</p><br>
+  <p><span class="c">●</span> Run this read for the weekly count, and</p>
+  <p>&nbsp;&nbsp;these two commands to list and remove the</p>
+  <p>&nbsp;&nbsp;preview branches.</p>
+ </div>
+ <div class="pane"><span class="t">Session outputs</span><div class="in" style="padding-right:8px">
+<div class="row"><span style="font-weight:bold">Session outputs</span><span class="d">8 items</span></div>
+<p class="d">🌐 1&nbsp;&nbsp;&nbsp;📸 1&nbsp;&nbsp;&nbsp;🔀 1&nbsp;&nbsp;&nbsp;🧪 1&nbsp;&nbsp;&nbsp;💻 2&nbsp;&nbsp;&nbsp;🔍 2</p><div class="g"><div class="row"><span class="gh">› how many signups this week? and clean up the old preview branches</span><span class="d">27 Oct</span></div><p class="rule">────────────────────────────────────────────────────────────────────────────────</p><div class="e"><div class="row"><span class="er">💻 git push origin --delete preview/old-header</span><span class="d">11:14</span></div><p class="sub"><span class="d">1 line · bash</span> · <span class="ds">⛔ deletes</span> <span class="b">[ copy command ]</span></p></div><div class="e"><div class="row"><span class="cm">💻 git branch -r</span><span class="d">11:14</span></div><p class="sub"><span class="d">1 line · bash</span> <span class="b">[ copy command ]</span></p></div><div class="e"><div class="row"><span class="sq">🔍 select count(*) from signups</span><span class="d">11:13</span></div><p class="sub"><span class="d">1 line · sql</span> · <span class="wa">▲ whole table: no where, no limit</span> <span class="b">[ copy query ]</span></p></div><div class="e"><div class="row"><span class="sq">🔍 select plan, count(*)</span><span class="d">11:13</span></div><p class="sub"><span class="d">4 lines · sql</span> <span class="b">[ copy query ]</span></p></div></div><div class="g"><div class="row"><span class="gh">› open the PR for the date picker fix</span><span class="d">27 Oct</span></div><p class="rule">────────────────────────────────────────────────────────────────────────────────</p><div class="e"><div class="row"><span class="ci">🧪 Watch the PR checks</span><span class="d">10:35</span></div><p class="sub"><span class="l">acme-web run 1843</span> <span class="b">[ copy link ]</span></p></div><div class="e"><div class="row"><span class="pr">🔀 Open the pull request</span><span class="d">10:31</span></div><p class="sub"><span class="l">acme-web#214</span> <span class="b">[ copy link ]</span></p></div></div><div class="g"><div class="row"><span class="gh">› publish the onboarding checklist as a page</span><span class="d">27 Oct</span></div><p class="rule">────────────────────────────────────────────────────────────────────────────────</p><div class="e"><div class="row"><span class="a">🌐 Onboarding checklist</span><span class="d">10:22</span></div><p class="sub"><span class="l">k3pQ9vR2mT7wXy</span> <span class="b">[ copy link ]</span></p></div><div class="e"><div class="row"><span class="im">📸 Capture the settings page on mobile</span><span class="d">10:20</span></div><p class="sub"><span class="l">settings-mobile.png</span> <span class="b">[ copy path ]</span></p></div></div></div>
+</div>

@@ -1,0 +1,12 @@
+{
+  "name": "session-outputs",
+  "owner": { "name": "gorkamb" },
+  "description": "The session-outputs plugin for Claude Code",
+  "plugins": [
+    {
+      "name": "session-outputs",
+      "source": "./",
+      "description": "A side pane listing what a session made for you: files, Artifacts, PRs, CI runs and the commands it hands you to run"
+    }
+  ]
+}
