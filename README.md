@@ -80,8 +80,9 @@ gets the same warning as one typed directly.
 
 **No mark does not mean safe.** It means nothing dangerous was spotted. The
 pane never calls a command safe: proving from the text alone that a command
-only reads cannot be done reliably, while spotting the dangerous ones can. Obvious writes
-like `git push` or `npm install` get no mark either, since you can see them.
+only reads cannot be done reliably, while spotting the dangerous ones can.
+Obvious writes like `git push` or `npm install` get no mark either, since you
+can see them.
 It reads the text and runs nothing, so still read what you paste.
 
 ## The config file
@@ -104,6 +105,13 @@ the file yourself, type `/outputs` to reload it.
 A project's file and your personal one, `~/.claude/session-outputs.json`, are
 merged. Both can only add warnings.
 
+## What it reads and sends
+
+It reads the session's tool calls and Claude's answers, checks that a listed
+file exists, reads the `<title>` of a page it lists, and reads the two config
+files. It runs no commands, sends nothing over the network, and keeps its
+list inside Claude Code's own session state.
+
 ## Good to know
 
 - Needs a Claude Code version whose plugins can open a side pane; tested with
@@ -112,8 +120,9 @@ merged. Both can only add warnings.
   with no way to turn it on.
 - Pull requests and runs are recognised on github.com only.
 - On mobile you can copy a file's path but not open the file.
-- Tested in the macOS terminal; its tests also draw the pane for the desktop
-  app, VS Code and mobile, and cover Windows paths.
+- Tested by hand in the macOS terminal. The tests also cover Windows paths and
+  how the pane draws in other Claude Code surfaces, which have not been tried
+  by hand.
 
 ## Developing
 
