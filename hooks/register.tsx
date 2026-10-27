@@ -33,9 +33,9 @@ const PR = /https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/pull\/\d+/g
 // One entry per run: the per-job links of `gh pr checks` fold into it.
 const CI = /https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/actions\/runs\/\d+/g
 // An absolute path standing on its own, POSIX or Windows: not the tail of `assets/x.png` or of a URL.
-const PATH = /(?<![\p{L}\p{N}_.~:/\\-])(?:[A-Za-z]:)?(?:[\\/][\p{L}\p{N}_.@%+-]+)+\.(?:png|jpe?g|webp|gif|pdf|mp4|webm)\b/giu
+const PATH = /(?<![\p{L}\p{N}_.~:/\\-])(?:[A-Za-z]:)?(?:[\\/][\p{L}\p{N}_.@%+-]+)+\.(?:png|jpe?g|webp|gif|pdf|mp4|webm|html?)\b/giu
 // The same in quotes, where it may hold spaces (macOS names screenshots "Screenshot … at 10.22.png").
-const QUOTED_PATH = /(["'])((?:[A-Za-z]:)?[\\/][^"'\n]*?\.(?:png|jpe?g|webp|gif|pdf|mp4|webm))\1/gi
+const QUOTED_PATH = /(["'])((?:[A-Za-z]:)?[\\/][^"'\n]*?\.(?:png|jpe?g|webp|gif|pdf|mp4|webm|html?))\1/gi
 const isPath = (s: string) => /^(?:[A-Za-z]:)?[\\/]/.test(s)
 const HTML_TITLE = /<title>([^<]*)<\/title>/i
 const HTML_PAGE = /\.html?$/i
@@ -84,8 +84,11 @@ export function candidates(tool: string, input: Record<string, unknown>, result:
   if (tool === 'Bash' && /\bgh\s+(pr\s+checks|run)\b/.test(command)) add('ci', CI, said)
   const files = tool === 'SendUserFile' ? strings(input.files) : [...strings(input), said]
   const text = files.join('\n')
+  // A page is the person's to open when written whole or printed, not when a source file is edited
+  // or when it is what an Artifact publish read.
+  const pages = !/^(Edit|MultiEdit|NotebookEdit)$/.test(tool) && made === undefined
   for (const found of new Set([...(text.match(PATH) ?? []), ...[...text.matchAll(QUOTED_PATH)].map(m => m[2] ?? '')]))
-    out.push({ kind: /\.(pdf|mp4|webm)$/i.test(found) ? 'file' : 'image', found })
+    if (pages || !HTML_PAGE.test(found)) out.push({ kind: /\.(pdf|mp4|webm|html?)$/i.test(found) ? 'file' : 'image', found })
   return out
 }
 
@@ -734,8 +737,8 @@ export const register: Register = on => {
     if (kept.length === 0) return ran
 
     let html: string | undefined
-    if (e.tool === 'Artifact' && typeof input.file_path === 'string' && HTML_PAGE.test(input.file_path))
-      html = await $.fs.read(input.file_path).then(t => t.slice(0, 8192), () => undefined)
+    const page = e.tool === 'Artifact' ? input.file_path : kept.find(c => HTML_PAGE.test(c.found))?.found
+    if (typeof page === 'string' && HTML_PAGE.test(page)) html = await $.fs.read(page).then(t => t.slice(0, 8192), () => undefined)
 
     const title = titleFrom(input, html)
     const at = Date.now()

@@ -53,7 +53,7 @@ claude plugin install session-outputs@session-outputs
 
 | Entry | When | Button |
 | --- | --- | --- |
-| 📸 📕 🎬 Files | Claude writes an image, a PDF or a video | copy path |
+| 📸 📕 🎬 📄 Files | Claude writes an image, a PDF, a video or an HTML page | copy path |
 | 🌐 Pages | Claude publishes an Artifact: a page, a design, a deck | copy link |
 | 📝 Docs | Claude creates a document with the Claude Docs connector | copy link |
 | 🔀 Pull requests | `gh pr create` opens one | copy link |

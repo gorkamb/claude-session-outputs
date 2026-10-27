@@ -21,6 +21,15 @@ test('Windows paths, and quoted paths with spaces, are taken too', () => {
   expect([win.href, win.label, copyText(win.href)]).toEqual(['file:///C:/Users/ana/my%20shot.png', 'my shot.png', 'C:\\Users\\ana\\my shot.png'])
 })
 
+test('a local HTML page counts as a file, except when a source file is edited or an Artifact is published', () => {
+  expect(kinds('Write', { file_path: '/t/report.html', content: '<html>' }, '')).toEqual([['file', '/t/report.html']])
+  expect(kinds('Bash', { command: 'make' }, { stdout: 'Wrote "/t/my page.htm"' })).toEqual([['file', '/t/my page.htm']])
+  expect(kinds('Edit', { file_path: '/app/index.html', old_string: 'a', new_string: 'b' }, '')).toEqual([])
+  expect(kinds('Artifact', { file_path: '/t/p.html' }, 'Published at https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd')).toEqual([
+    ['artifact', 'https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd'],
+  ])
+})
+
 test('artifact links count only from an Artifact publish result', () => {
   const url = 'Published at https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd'
   expect(kinds('Artifact', { file_path: '/t/p.html' }, url)).toEqual([['artifact', 'https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd']])
@@ -33,7 +42,7 @@ test('a publish through the claude-artifacts MCP server counts too', () => {
   const input = { files: [{ as: 'index.html', path: '/t/p.html' }], title: 'Plan' }
   expect(kinds('mcp__claude-artifacts__publish_files', input, said)).toEqual([['artifact', 'https://claude.ai/artifact/9Whu26JUnNEGN4EsNFZEGK']])
   expect(kinds('mcp__claude-artifacts__read', { url: 'https://claude.ai/artifact/9Whu26JUnNEGN4EsNFZEGK' }, said)).toEqual([])
-  expect(kinds('mcp__other__publish_files', input, said)).toEqual([])
+  expect(kinds('mcp__other__publish_files', input, said).filter(([k]) => k === 'artifact')).toEqual([])
 })
 
 test('a Claude Docs document counts when a batch creates it, titled by its name', () => {
