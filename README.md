@@ -15,6 +15,13 @@ Claude asks you to run. No more scrolling back to find them.
 ```
 
 Answer `y` to add the marketplace, and pick "user" to have it in every project.
+Then load it into the running session:
+
+```
+/reload-plugins
+```
+
+A session started after the install loads it by itself.
 
 **2. Set it up for your project.** In the project, run:
 
