@@ -1,5 +1,5 @@
 import { expect, test } from 'claude-code/testing'
-import { candidates, codeBlocks, copyText, matches, parseConfig, riskOf, touchesProd, groups, iconOf, strings, titleFrom, toItem, when } from './register'
+import { candidates, codeBlocks, copyText, matches, parseConfig, riskOf, touchesProd, groups, iconOf, newest, strings, titleFrom, toItem, when } from './register'
 
 const kinds = (tool: string, input: Record<string, unknown>, result: unknown) =>
   candidates(tool, input, result).map(c => [c.kind, c.found])
@@ -117,6 +117,16 @@ test('groups puts newest first and keeps one heading per consecutive prompt', ()
   expect(groups([a('/t/1.png', 'one'), a('/t/2.png', 'one'), a('/t/3.png', 'two')]).map(g => [g.turn, g.items.map(i => i.label)])).toEqual([
     ['two', ['3.png']],
     ['one', ['2.png', '1.png']],
+  ])
+})
+
+test('newest moves an item seen again to the top, under the prompt that brought it back', () => {
+  const a = (f: string, turn: string, title?: string) => toItem({ kind: 'file', found: f }, 'Bash', title, 0, turn)
+  const list = newest(newest([], [a('/t/r.pdf', 'one', 'old')]), [a('/t/b.png', 'two')])
+  const again = newest(list, [a('/t/r.pdf', 'three', 'new'), a('/t/r.pdf', 'three', 'new')])
+  expect(again.map(i => [i.label, i.turn, i.title])).toEqual([
+    ['b.png', 'two', 'b.png'],
+    ['r.pdf', 'three', 'new'],
   ])
 })
 
