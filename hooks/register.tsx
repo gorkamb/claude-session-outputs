@@ -573,7 +573,10 @@ const norm = (p: string) => {
   return /^[A-Za-z]:/.test(s) ? s.toLowerCase() : s
 }
 
+// Reads overlap (session start, /outputs, a config edit): only the latest one is saved.
+let loads = 0
 async function loadConfig($: EngineInterface) {
+  const load = ++loads
   const home = (await $.env.get('HOME')) ?? (await $.env.get('USERPROFILE'))
   // The project's file is the nearest one from the session's directory up to the repository root,
   // short of the home folder.
@@ -593,6 +596,7 @@ async function loadConfig($: EngineInterface) {
   const merged: Config = { prod: [], destroy: [] }
   for (const path of paths as string[]) {
     const text = await $.fs.read(path).catch(() => undefined)
+    if (load !== loads) return
     if (text === undefined) continue
     const one = parseConfig(text)
     if (one === undefined) {
@@ -603,7 +607,7 @@ async function loadConfig($: EngineInterface) {
     merged.prod.push(...one.prod)
     merged.destroy.push(...one.destroy)
   }
-  await update($, config, () => merged)
+  if (load === loads) await update($, config, () => merged)
 }
 
 
@@ -705,12 +709,14 @@ export const register: Register = on => {
     return done
   }).catch(($, e, next) => next(e))
 
+  // The prompt names the group only once it entered: a dropped one leaves the last group as it was.
   on('prompt.submit', async ($, e, next) => {
+    const done = await next(e)
     const isPerson = e.origin.kind === 'composer' || e.origin.kind === 'bridge'
-    if (isPerson && e.isMeta !== true && e.command === undefined && e.text.trim() !== '')
+    if (done.drop === undefined && isPerson && e.isMeta !== true && e.command === undefined && e.text.trim() !== '')
       await update($, turn, () => e.text)
-    return next(e)
-  })
+    return done
+  }).catch(($, e, next) => next(e))
 
   on('tool.call', async ($, e, next) => {
     const since = Date.now()

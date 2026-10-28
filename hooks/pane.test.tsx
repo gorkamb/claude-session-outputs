@@ -209,3 +209,16 @@ test('a file written again moves up without reopening the pane', async ($, on) =
   expect(await ui.findAll({ type: 'Button' })).toHaveLength(1)
   await ui.unmount()
 })
+
+test('a prompt that did not enter leaves the group to the last one that did', async ($, on) => {
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('prompt.submit', (_, e) => (e.text === 'blocked ask' ? { drop: 'refused' } : { text: e.text }))
+  on('turn.complete', (_, e) => ({ text: e.answer }))
+  await $.prompt.submit({ text: 'first ask', origin: { kind: 'composer' } } as never)
+  await $.prompt.submit({ text: 'blocked ask', origin: { kind: 'composer' } } as never)
+  await $.turn.complete({ answer: '```bash\ngit status\n```', durationMs: 1, isAborted: false, turnId: 't', reason: 'completed' } as never)
+  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /first ask/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /blocked ask/ })).toBeUndefined()
+  await ui.unmount()
+})
