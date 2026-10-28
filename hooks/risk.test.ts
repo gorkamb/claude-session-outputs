@@ -426,5 +426,6 @@ test('long crafted input is classified in a blink', () => {
     ['do with $tags$', () => riskOf('sql', 'do ' + tags)],
     ['nested parens', () => riskOf('sql', 'update t set a = ' + '('.repeat(30000))],
   ] as const)
-    expect([what, ms(f) < 200]).toEqual([what, true])
+    // A linear scan takes tens of ms here and a few times that on a CI runner; a quadratic one, seconds.
+    expect([what, ms(f) < 1000]).toEqual([what, true])
 })
