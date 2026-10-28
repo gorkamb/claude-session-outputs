@@ -30,6 +30,24 @@ test('a local HTML page counts as a file, except when a source file is edited or
   ])
 })
 
+test('spreadsheets, documents, decks, SVGs and archives count; a CSV or SVG being edited does not', () => {
+  const out = { stdout: 'Wrote /t/q3.csv /t/q3.xlsx /t/memo.docx /t/deck.pptx /t/logo.svg /t/build.zip' }
+  expect(kinds('Bash', { command: 'make report' }, out)).toEqual([
+    ['file', '/t/q3.csv'],
+    ['file', '/t/q3.xlsx'],
+    ['file', '/t/memo.docx'],
+    ['file', '/t/deck.pptx'],
+    ['image', '/t/logo.svg'],
+    ['file', '/t/build.zip'],
+  ])
+  expect(kinds('Write', { file_path: '/t/q3.csv', content: 'a,b' }, '')).toEqual([['file', '/t/q3.csv']])
+  expect(kinds('Edit', { file_path: '/app/fixtures/users.csv', old_string: 'a', new_string: 'b' }, '')).toEqual([])
+  expect(kinds('Edit', { file_path: '/app/icon.svg', old_string: 'a', new_string: 'b' }, '')).toEqual([])
+  expect(kinds('Bash', { command: 'ls' }, { stdout: '/t/notes.md /t/data.json /t/log.txt' })).toEqual([])
+  const icon = (f: string) => iconOf(toItem({ kind: 'file', found: f }, 'Bash', undefined, 0, ''))
+  expect([icon('/t/q3.csv'), icon('/t/deck.pptx'), icon('/t/build.zip'), icon('/t/memo.docx')]).toEqual(['📊', '📽️', '🗜️', '📄'])
+})
+
 test('artifact links count only from an Artifact publish result', () => {
   const url = 'Published at https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd'
   expect(kinds('Artifact', { file_path: '/t/p.html' }, url)).toEqual([['artifact', 'https://claude.ai/artifact/Bws5cbdhuzv1S9syDqWnd']])

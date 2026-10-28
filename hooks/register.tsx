@@ -33,12 +33,14 @@ const PR = /https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/pull\/\d+/g
 // One entry per run: the per-job links of `gh pr checks` fold into it.
 const CI = /https:\/\/github\.com\/[\w.-]+\/[\w.-]+\/actions\/runs\/\d+/g
 // An absolute path standing on its own, POSIX or Windows: not the tail of `assets/x.png` or of a URL.
-const PATH = /(?<![\p{L}\p{N}_.~:/\\-])(?:[A-Za-z]:)?(?:[\\/][\p{L}\p{N}_.@%+-]+)+\.(?:png|jpe?g|webp|gif|pdf|mp4|webm|html?)\b/giu
+const PATH = /(?<![\p{L}\p{N}_.~:/\\-])(?:[A-Za-z]:)?(?:[\\/][\p{L}\p{N}_.@%+-]+)+\.(?:png|jpe?g|webp|gif|svg|pdf|mp4|webm|html?|csv|xlsx|docx|pptx|zip)\b/giu
 // The same in quotes, where it may hold spaces (macOS names screenshots "Screenshot … at 10.22.png").
-const QUOTED_PATH = /(["'])((?:[A-Za-z]:)?[\\/][^"'\n]*?\.(?:png|jpe?g|webp|gif|pdf|mp4|webm|html?))\1/gi
+const QUOTED_PATH = /(["'])((?:[A-Za-z]:)?[\\/][^"'\n]*?\.(?:png|jpe?g|webp|gif|svg|pdf|mp4|webm|html?|csv|xlsx|docx|pptx|zip))\1/gi
 const isPath = (s: string) => /^(?:[A-Za-z]:)?[\\/]/.test(s)
 const HTML_TITLE = /<title>([^<]*)<\/title>/i
 const HTML_PAGE = /\.html?$/i
+// Text formats a source edit may touch: listed when written whole, not when edited.
+const EDITABLE = /\.(html?|csv|svg)$/i
 
 /** Every string inside a value: the fields of a tool's input or result, newlines intact. */
 export function strings(v: unknown, out: string[] = []): string[] {
@@ -84,11 +86,11 @@ export function candidates(tool: string, input: Record<string, unknown>, result:
   if (tool === 'Bash' && /\bgh\s+(pr\s+checks|run)\b/.test(command)) add('ci', CI, said)
   const files = tool === 'SendUserFile' ? strings(input.files) : [...strings(input), said]
   const text = files.join('\n')
-  // A page is the person's to open when written whole or printed, not when a source file is edited
-  // or when it is what an Artifact publish read.
+  // A page or a text file is the person's to open when written whole or printed, not when a source
+  // file is edited or when it is what an Artifact publish read.
   const pages = !/^(Edit|MultiEdit|NotebookEdit)$/.test(tool) && made === undefined
   for (const found of new Set([...(text.match(PATH) ?? []), ...[...text.matchAll(QUOTED_PATH)].map(m => m[2] ?? '')]))
-    if (pages || !HTML_PAGE.test(found)) out.push({ kind: /\.(pdf|mp4|webm|html?)$/i.test(found) ? 'file' : 'image', found })
+    if (pages || !EDITABLE.test(found)) out.push({ kind: /\.(png|jpe?g|webp|gif|svg)$/i.test(found) ? 'image' : 'file', found })
   return out
 }
 
@@ -616,7 +618,7 @@ const RISK_MARK: Record<Risk['level'], string> = { none: '', heavy: '▲', write
 
 // Emoji per kind; files split by extension.
 const ICON: Record<Kind, string> = { artifact: '🌐', doc: '📝', image: '📸', file: '📄', pr: '🔀', ci: '🧪', command: '💻', sql: '🔍' }
-const FILE_ICON: Record<string, string> = { pdf: '📕', mp4: '🎬', webm: '🎬' }
+const FILE_ICON: Record<string, string> = { pdf: '📕', mp4: '🎬', webm: '🎬', csv: '📊', xlsx: '📊', pptx: '📽️', zip: '🗜️' }
 export const iconOf = (a: Item) =>
   a.kind === 'file' ? (FILE_ICON[a.label.split('.').pop()?.toLowerCase() ?? ''] ?? ICON.file) : ICON[a.kind]
 // Theme keys, so both terminal themes keep contrast.
