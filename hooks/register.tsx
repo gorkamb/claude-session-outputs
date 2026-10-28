@@ -670,13 +670,16 @@ export function newest(list: Item[], add: Item[]): Item[] {
 /** How many of `add` the list did not hold yet: only those reopen a closed pane. */
 const fresh = (list: Item[], add: Item[]) => new Set(add.map(a => a.href).filter(h => !list.some(a => a.href === h))).size
 
+/** Removes the entries examined, not their href: one registered again since the check stays. */
+export const without = (list: Item[], gone: Item[]) => list.filter(a => !gone.some(g => g.href === a.href && g.at === a.at))
+
 /** Drops the files that are gone from disk; links stay. */
 async function prune($: EngineInterface) {
   const list = await read($, items)
-  const gone = new Set<string>()
+  const gone: Item[] = []
   for (const a of list)
-    if (a.href.startsWith('file://') && !(await $.fs.exists(copyText(a.href)).catch(() => false))) gone.add(a.href)
-  if (gone.size > 0) await update($, items, l => l.filter(a => !gone.has(a.href)))
+    if (a.href.startsWith('file://') && !(await $.fs.exists(copyText(a.href)).catch(() => false))) gone.push(a)
+  if (gone.length > 0) await update($, items, l => without(l, gone))
 }
 
 export const register: Register = on => {

@@ -1,5 +1,5 @@
 import { expect, test } from 'claude-code/testing'
-import { candidates, codeBlocks, copyText, matches, parseConfig, riskOf, touchesProd, groups, iconOf, newest, strings, titleFrom, toItem, when } from './register'
+import { candidates, codeBlocks, copyText, matches, parseConfig, riskOf, touchesProd, groups, iconOf, newest, strings, titleFrom, toItem, when, without } from './register'
 
 const kinds = (tool: string, input: Record<string, unknown>, result: unknown) =>
   candidates(tool, input, result).map(c => [c.kind, c.found])
@@ -265,4 +265,12 @@ test('matches: substring any case, or /regex/', () => {
   expect(matches('FLYCTL', 'flyctl deploy')).toBe(true)
   expect(matches('/^psql\\b/i', 'PSQL -c 1')).toBe(true)
   expect(matches('/[/', 'x')).toBe(false)
+})
+
+test('pruning a gone file keeps the entry registered again after the check began', () => {
+  const old = toItem({ kind: 'file', found: '/t/r.html' }, 'Write', undefined, 1, 'a')
+  const again = toItem({ kind: 'file', found: '/t/r.html' }, 'Write', undefined, 2, 'b')
+  const other = toItem({ kind: 'file', found: '/t/s.html' }, 'Write', undefined, 1, 'a')
+  expect(without([old, other], [old])).toEqual([other])
+  expect(without(newest([old, other], [again]), [old])).toEqual([other, again])
 })

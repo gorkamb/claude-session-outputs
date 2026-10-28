@@ -1,6 +1,6 @@
 {
   "name": "session-outputs",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A side pane listing what a session made for you: files, Artifacts, PRs, CI runs and the commands it hands you to run",
   "author": { "name": "gorkamb", "url": "https://github.com/gorkamb" },
   "homepage": "https://github.com/gorkamb/claude-session-outputs",
