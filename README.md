@@ -1,5 +1,8 @@
 # session-outputs
 
+[![reach](https://raw.githubusercontent.com/karanb192/awesome-claude-code-mods/main/badges/gorkamb--claude-session-outputs--session-outputs-reach.svg)](https://mods.aidojo.si/mods/gorkamb--claude-session-outputs--session-outputs/)
+[![validates](https://raw.githubusercontent.com/karanb192/awesome-claude-code-mods/main/badges/gorkamb--claude-session-outputs--session-outputs-validates.svg)](https://mods.aidojo.si/mods/gorkamb--claude-session-outputs--session-outputs/)
+
 A side pane for Claude Code that collects what the session made for you:
 screenshots, files, published pages, docs, pull requests, CI runs, and the commands
 Claude asks you to run. No more scrolling back to find them.
